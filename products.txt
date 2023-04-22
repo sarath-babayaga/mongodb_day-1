@@ -1,0 +1,37 @@
+
+Products
+*************
+
+1.   db.products.find()
+
+2.   db.products.find({ price: { $gte: 400, $lte: 800 } })
+
+3.   db.products.find({ price: { $not: { $gt: 400, $lt: 600 } } })
+
+4.   db.products.find({ price: { $gt: 500 } })
+
+5.   db.products.find({ product_name, product_material })
+
+6.   db.products.find({ id: 10 })
+
+7.   db.products.find({ product_name, product_material })
+
+8.   db.products.find({ material: { $regex: /soft/} }, { name, material })
+
+9.   db.products.find({$and: [{product_color: "indigo"}, {product_price: 492}]})
+
+10.   db.products.deleteMany(
+        { "product_price": { "$in": db.products.aggregate([
+           { "$group": {
+              "_id": "$product_price",
+              "count": { "$sum": 1 }
+         }},
+         { "$match": {
+             "count": { "$gt": 1 }
+         }},
+         { "$project": {
+             "_id": 0,
+             "price": "$_id"
+         }}
+       ]).map(doc => doc.price) } }
+     )
